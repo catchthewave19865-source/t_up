@@ -1,0 +1,234 @@
+<!-- 差し替え箇所: TOTAL=11 PERCENT=11 ITEM_1〜ITEM_10=各項目点数 TOP3=眠っている機能名 DATE=2026-07-27 -->
+<style>
+  .cc-wrap{container-type:inline-size; max-width:1200px; margin:0 auto; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .cc-frame{width:100%; min-height:calc(100cqi * 9 / 16); display:flex; flex-direction:column; position:relative; border-radius:10px; overflow:hidden;
+    background:linear-gradient(180deg,#211F1B,#17160F); color:#F3EFE6; box-shadow:0 24px 50px -20px rgba(0,0,0,.55);}
+  .cc-termbar{display:flex; align-items:center; gap:6px; padding:2.2% 3.5%; background:#141310; border-bottom:1px solid rgba(255,255,255,.08); flex-shrink:0;}
+  .cc-dot{width:9px; height:9px; border-radius:50%; background:rgba(243,239,230,.22); flex-shrink:0;}
+  .cc-termtitle{margin-left:6px; font-size:clamp(7px,1.4cqi,9px); color:rgba(243,239,230,.4); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .cc-body{flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:3.5% 4.5% 3%; min-height:0;}
+  .cc-block{flex-shrink:0;}
+  .cc-block + .cc-block{margin-top:clamp(8px,2.2cqi,20px);}
+  .cc-eyebrow{display:flex; align-items:center; gap:7px; font-size:clamp(14px,3.6cqi,28px); font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#F3EFE6; flex-shrink:0;}
+  .cc-prompt{color:#E08560; font-weight:800;}
+  .cc-hero{display:flex; align-items:flex-end; gap:4%; margin-top:2%; flex-shrink:0;}
+  .cc-score{display:flex; align-items:baseline; gap:2%; line-height:.85;}
+  .cc-num{font-size:clamp(34px,12.5cqi,100px); font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.02em;}
+  .cc-den{font-size:clamp(10px,2.6cqi,16px); font-weight:600; color:#B8AF9E;}
+  .cc-side{display:flex; flex-direction:column; gap:1.5%; padding-bottom:1%;}
+  .cc-label{font-size:clamp(7.5px,1.5cqi,9.5px); font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#B8AF9E;}
+  .cc-pct{font-size:clamp(12px,2.9cqi,17px); font-weight:800; color:#E08560;}
+  .cc-note{font-size:clamp(6.5px,1.2cqi,8px); color:#8A8171; line-height:1.45; margin-top:.8%;}
+  .cc-gauge{margin-top:2.5%; flex-shrink:0; display:flex; align-items:center; gap:10px;}
+  .cc-gauge-seg{display:flex; align-items:center; gap:clamp(2px,.5cqi,3.5px);}
+  .cc-seg{width:clamp(6px,1.7cqi,13px); height:clamp(9px,2.4cqi,18px); border-radius:1px; background:rgba(224,133,96,.18); flex-shrink:0;}
+  .cc-seg.filled{background:#E08560;}
+  .cc-gauge-num{font-size:clamp(8px,1.7cqi,11px); color:#B8AF9E; font-weight:600; font-variant-numeric:tabular-nums;}
+  .cc-grid-label{font-size:clamp(7.5px,1.5cqi,9.5px); font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#B8AF9E; flex-shrink:0;}
+  .cc-grid{display:grid; grid-template-columns:1fr 1fr; column-gap:4%; row-gap:1.8%; margin-top:2%; flex-shrink:0;}
+  .cc-item{display:flex; align-items:center; gap:3%;}
+  .cc-item-label{font-size:clamp(7.5px,1.5cqi,9.5px); width:40%; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .cc-item-track{flex:1; height:clamp(3.5px,.9cqi,5.5px); background:rgba(224,133,96,.18); border-radius:2px; overflow:hidden;}
+  .cc-item-track b{display:block; height:100%; background:#E08560; border-radius:2px; font-weight:400;}
+  .cc-item-val{font-size:clamp(7.5px,1.5cqi,9.5px); color:#B8AF9E; font-variant-numeric:tabular-nums; width:16px; text-align:right; flex-shrink:0;}
+  .cc-top3-label{display:flex; align-items:center; gap:5px; font-size:clamp(7.5px,1.5cqi,9.5px); font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:#B8AF9E; flex-shrink:0;}
+  .cc-top3-label .cc-sq{width:6px; height:6px; background:#E08560; flex-shrink:0; display:inline-block;}
+  .cc-top3{display:flex; gap:3.5%; margin-top:2%; flex-shrink:0; flex-wrap:wrap; row-gap:6px;}
+  .cc-top3 span{display:flex; align-items:center; gap:4px; font-size:clamp(7.5px,1.5cqi,10px); font-weight:600; white-space:nowrap;}
+  .cc-top3 em{color:#E08560; font-style:normal; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-weight:800; margin-right:2px;}
+  .cc-footer{padding-top:1.8%; border-top:1px solid rgba(243,239,230,.12); display:flex; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0; flex-wrap:wrap;}
+  .cc-footer b{font-size:clamp(6.5px,1.2cqi,8px); font-weight:700; white-space:nowrap;}
+  .cc-badge{font-size:clamp(5.5px,1.1cqi,7px); color:#E08560; background:rgba(224,133,96,.16); padding:2px 7px; border-radius:999px; font-weight:700; white-space:nowrap;}
+  .cc-footer em{font-size:clamp(6px,1.2cqi,7.5px); color:#8A8171; white-space:nowrap; font-style:normal;}
+  .cc-unofficial{width:100%; font-size:clamp(5.5px,1.05cqi,6.5px); color:#8A8171; margin-top:.6%; flex-shrink:0;}
+  .cc-share{margin-top:14px; text-align:center;}
+  .cc-share-steps{margin:0 0 10px; font-size:10.5px; color:#8A8171; line-height:1.6;}
+  .cc-share-btns{display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;}
+  .cc-share-btn{appearance:none; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:6px; padding:9px 22px; border-radius:6px; background:#17160F; border:1.5px solid #E08560; color:#E08560; font-size:12.5px; font-weight:700;}
+  .cc-share-btn:hover{background:#211F1B;}
+  .cc-share-btn:disabled{opacity:.5; cursor:not-allowed;}
+  .cc-share-status{margin-top:8px; font-size:11px; color:#E08560; font-weight:700; min-height:14px;}
+  .cc-share-note{margin-top:6px; font-size:10px; color:#8A8171;}
+</style>
+<div class="cc-wrap">
+  <div class="cc-frame">
+    <div class="cc-termbar">
+      <span class="cc-dot"></span><span class="cc-dot"></span><span class="cc-dot"></span>
+      <span class="cc-termtitle">claude — checkup-card.html</span>
+    </div>
+    <div class="cc-body">
+      <div class="cc-block cc-block-head">
+        <div class="cc-eyebrow"><span class="cc-prompt">❯</span>CLAUDE CODE 活用度診断</div>
+        <div class="cc-hero">
+          <div class="cc-score"><span class="cc-num">11</span><span class="cc-den">/100</span></div>
+          <div class="cc-side">
+            <div class="cc-label">公式推奨使用度</div>
+            <div class="cc-pct">11%</div>
+            <div class="cc-note">※このスコアは公式推奨機能の活用度<br>（腕前ではない）</div>
+          </div>
+        </div>
+        <div class="cc-gauge"><div class="cc-gauge-seg" id="cc-gauge-seg"></div><span class="cc-gauge-num">11/100</span></div>
+      </div>
+      <div class="cc-block cc-block-grid">
+        <div class="cc-grid-label">項目別内訳（10項目 / 各10点）</div>
+        <div class="cc-grid">
+          <div class="cc-item"><span class="cc-item-label">1. CLAUDE.md育成</span><span class="cc-item-track"><b style="width: calc(0 * 10%)"></b></span><span class="cc-item-val">0</span></div>
+          <div class="cc-item"><span class="cc-item-label">6. settings層</span><span class="cc-item-track"><b style="width: calc(1 * 10%)"></b></span><span class="cc-item-val">1</span></div>
+          <div class="cc-item"><span class="cc-item-label">2. 簡潔さ</span><span class="cc-item-track"><b style="width: calc(0 * 10%)"></b></span><span class="cc-item-val">0</span></div>
+          <div class="cc-item"><span class="cc-item-label">7. コンテキスト管理</span><span class="cc-item-track"><b style="width: calc(0 * 10%)"></b></span><span class="cc-item-val">0</span></div>
+          <div class="cc-item"><span class="cc-item-label">3. 中身の質</span><span class="cc-item-track"><b style="width: calc(0 * 10%)"></b></span><span class="cc-item-val">0</span></div>
+          <div class="cc-item"><span class="cc-item-label">8. ワークフロー型</span><span class="cc-item-track"><b style="width: calc(0 * 10%)"></b></span><span class="cc-item-val">0</span></div>
+          <div class="cc-item"><span class="cc-item-label">4. フック</span><span class="cc-item-track"><b style="width: calc(1 * 10%)"></b></span><span class="cc-item-val">1</span></div>
+          <div class="cc-item"><span class="cc-item-label">9. 検証の自走</span><span class="cc-item-track"><b style="width: calc(1 * 10%)"></b></span><span class="cc-item-val">1</span></div>
+          <div class="cc-item"><span class="cc-item-label">5. スキル・MCP</span><span class="cc-item-track"><b style="width: calc(8 * 10%)"></b></span><span class="cc-item-val">8</span></div>
+          <div class="cc-item"><span class="cc-item-label">10. メモリ手入れ</span><span class="cc-item-track"><b style="width: calc(0 * 10%)"></b></span><span class="cc-item-val">0</span></div>
+        </div>
+      </div>
+      <div class="cc-block cc-block-top3">
+        <div class="cc-top3-label"><span class="cc-sq"></span>眠っている機能 TOP3</div>
+        <div class="cc-top3">
+          <span><em>1</em>CLAUDE.md（/init初期化）</span>
+          <span><em>2</em>プランモード（計画→実装）</span>
+          <span><em>3</em>フックでの検証自動化</span>
+        </div>
+      </div>
+      <div class="cc-footer">
+        <b>Claude Code活用度診断</b>
+        <span class="cc-badge">公式ドキュメント準拠・全項目出典つき</span>
+        <em>実行日: 2026-07-27</em>
+        <span class="cc-unofficial">非公式 / not affiliated with Anthropic</span>
+      </div>
+    </div>
+  </div>
+  <div class="cc-share">
+    <p class="cc-share-steps">シェアの仕方: ① 下の「カード画像をコピー」を押す → ② 「Xでシェアする」を押す（投稿文入りの画面が開く） → ③ 投稿画面で ⌘V（WindowsはCtrl＋V）で画像を貼り付けてポスト</p>
+    <div class="cc-share-btns">
+      <button type="button" class="cc-share-btn" id="cc-copy-btn">📋 カード画像をコピー</button>
+      <button type="button" class="cc-share-btn" id="cc-share-btn">Xでシェアする（投稿文入りの画面が開く）</button>
+    </div>
+    <div class="cc-share-status" id="cc-copy-status" aria-live="polite"></div>
+    <div class="cc-share-note">※自動では投稿されません。画像化はこのページの中だけで完結し、どこにも送信されません。画像はあなたの貼り付け操作でのみ投稿に載ります</div>
+  </div>
+</div>
+<script>
+(function(){
+  var TOTAL = 11;
+  var TOP3_1 = "CLAUDE.md（/init初期化）";
+  var filled = Math.round(TOTAL / 10);
+  var gaugeEl = document.getElementById('cc-gauge-seg');
+  if (gaugeEl){
+    for (var i = 0; i < 10; i++){
+      var seg = document.createElement('span');
+      seg.className = 'cc-seg' + (i < filled ? ' filled' : '');
+      gaugeEl.appendChild(seg);
+    }
+  }
+  var gaugeText = "■".repeat(filled) + "□".repeat(10 - filled);
+  var text = "【Claude Code活用度診断】結果\n" + gaugeText + " " + TOTAL + "点/100点（公式推奨使用度" + TOTAL + "%）\n" + "一番眠っていた機能:「" + TOP3_1 + "」\n" + "診断の配布はこちら → https://yukimaruai.com";
+  var url = "https://x.com/intent/post?text=" + encodeURIComponent(text);
+  var shareBtn = document.getElementById('cc-share-btn');
+  if (shareBtn) shareBtn.addEventListener('click', function(){ window.open(url, '_blank'); });
+
+  function buildOffscreenFrame(){
+    var live = document.querySelector('.cc-frame');
+    if (!live) throw new Error('no-frame');
+    var offscreen = document.createElement('div');
+    offscreen.style.cssText = 'position:fixed; left:-99999px; top:0; container-type:inline-size; width:1200px;';
+    var frameClone = live.cloneNode(true);
+    frameClone.removeAttribute('id');
+    offscreen.appendChild(frameClone);
+    document.body.appendChild(offscreen);
+    void offscreen.offsetHeight;
+    return offscreen;
+  }
+
+  function cssText(){
+    var css = '';
+    for (var i = 0; i < document.styleSheets.length; i++){
+      try {
+        var rules = document.styleSheets[i].cssRules;
+        for (var j = 0; j < rules.length; j++){ css += rules[j].cssText + '\n'; }
+      } catch(e){}
+    }
+    return css;
+  }
+
+  function cardToPng(){
+    var node = buildOffscreenFrame();
+    return new Promise(function(resolve, reject){
+      try {
+        var w = node.offsetWidth, h = node.offsetHeight;
+        var clone = node.cloneNode(true);
+        clone.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
+        clone.style.position = 'static';
+        clone.style.left = 'auto';
+        clone.style.top = 'auto';
+        var css = cssText();
+        var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + (w*2) + '" height="' + (h*2) + '" viewBox="0 0 ' + w + ' ' + h + '"><foreignObject width="' + w + '" height="' + h + '"><style>' + css.replace(/&/g, '&') + '</style>' + new XMLSerializer().serializeToString(clone) + '</foreignObject></svg>';
+        var dataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        var img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function(){
+          try {
+            var cv = document.createElement('canvas');
+            cv.width = w * 2; cv.height = h * 2;
+            var cx = cv.getContext('2d');
+            cx.scale(2, 2);
+            cx.drawImage(img, 0, 0, w, h);
+            node.remove();
+            resolve(cv);
+          } catch(drawErr){ node.remove(); reject(drawErr); }
+        };
+        img.onerror = function(){ node.remove(); reject(new Error('render')); };
+        img.src = dataUrl;
+      } catch(err){ node.remove(); reject(err); }
+    });
+  }
+
+  var copyBtn = document.getElementById('cc-copy-btn');
+  var statusEl = document.getElementById('cc-copy-status');
+
+  function downloadPng(blob){
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'claude-checkup-card.png';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    if (statusEl) statusEl.textContent = '画像を保存しました。投稿画面にドラッグして添付してください';
+  }
+
+  if (copyBtn){
+    var originalLabel = copyBtn.textContent;
+    copyBtn.addEventListener('click', function(){
+      copyBtn.disabled = true;
+      if (statusEl) statusEl.textContent = '';
+      cardToPng().then(function(cv){
+        cv.toBlob(function(blob){
+          if (!blob){
+            if (statusEl) statusEl.textContent = 'この環境では画像化できませんでした。カードをスクショ（Mac: ⌘+Shift+Ctrl+4 / Win: Win+Shift+S）して貼り付けてください';
+            copyBtn.disabled = false;
+            return;
+          }
+          if (navigator.clipboard && window.ClipboardItem){
+            navigator.clipboard.write([ new ClipboardItem({ 'image/png': blob }) ]).then(function(){
+              copyBtn.textContent = '✅ コピーしました — 投稿画面で ⌘V / Ctrl+V';
+              copyBtn.disabled = false;
+              setTimeout(function(){ copyBtn.textContent = originalLabel; }, 6000);
+            }).catch(function(){
+              downloadPng(blob);
+              copyBtn.disabled = false;
+            });
+          } else {
+            downloadPng(blob);
+            copyBtn.disabled = false;
+          }
+        }, 'image/png');
+      }).catch(function(){
+        if (statusEl) statusEl.textContent = 'この環境では画像化できませんでした。カードをスクショ（Mac: ⌘+Shift+Ctrl+4 / Win: Win+Shift+S）して貼り付けてください';
+        copyBtn.disabled = false;
+      });
+    });
+  }
+})();
+</script>
