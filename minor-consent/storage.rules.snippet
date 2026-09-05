@@ -1,0 +1,27 @@
+// 未成年利用・保護者同意書（Web版）の Storage ルール。
+// 既存の storage.rules に取り込む。
+//
+// 重要: 本人確認書類には、領収書で使っている
+// `?alt=media&token=...` 形式の恒久ダウンロード URL を発行しないこと。
+// あの URL は知っている者が無期限に開ける。ここでは全経路を閉じ、
+// 閲覧のたびに Cloud Functions が数分で失効する署名付き URL を発行する。
+
+match /b/{bucket}/o {
+
+  // 本人確認書類。クライアントからは読み書きとも一切不可。
+  // アップロードもフォームから直接ではなく、Cloud Functions が
+  // 受け取って検証してから書き込む。
+  match /minorConsents/{consentId}/idDocument/{fileName} {
+    allow read, write: if false;
+  }
+
+  // 手書き署名の画像。同上。
+  match /minorConsents/{consentId}/signatures/{fileName} {
+    allow read, write: if false;
+  }
+
+  // 生成済みの同意書 PDF。保護者への控え送付も署名付き URL で行う。
+  match /minorConsents/{consentId}/pdf/{fileName} {
+    allow read, write: if false;
+  }
+}

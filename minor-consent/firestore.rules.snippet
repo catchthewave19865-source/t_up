@@ -1,0 +1,49 @@
+// 未成年利用・保護者同意書（Web版）のセキュリティルール。
+// 既存の firestore.rules の match /databases/{database}/documents { ... } の中に取り込む。
+//
+// 前提となる方針:
+//   1. 保護者はブックルのアカウントを持たない。フォームからの書き込みは
+//      すべて Cloud Functions（Admin SDK）が行い、クライアントは直接書かない。
+//   2. 本人確認書類は sensitive サブコレクションに隔離し、
+//      クライアントからは管理者であっても読ませない。
+//   3. 会員本人・現場スタッフからは同意記録が見えないようにする。
+
+function isSignedIn() {
+  return request.auth != null;
+}
+
+// 既存の adminUsers コレクションで管理者を判定する。
+function isOrgAdmin(orgId) {
+  return isSignedIn()
+    && exists(/databases/$(database)/documents/adminUsers/$(request.auth.uid))
+    && get(/databases/$(database)/documents/adminUsers/$(request.auth.uid)).data.orgId == orgId;
+}
+
+match /minorConsents/{consentId} {
+  // 管理者は一覧・詳細を読める。ただし本人確認書類の実体は含まれない。
+  allow get, list: if isOrgAdmin(resource.data.orgId);
+
+  // 作成・更新・承認はすべて Cloud Functions 経由。
+  // Admin SDK はルールを迂回するため、ここは全面的に閉じてよい。
+  allow create, update, delete: if false;
+
+  // 本人確認書類の実体。クライアントからは誰も読めない。
+  // 閲覧は callable function が Admin SDK で読み、
+  // 数分で失効する署名付き URL を返すこと。
+  match /sensitive/{docId} {
+    allow read, write: if false;
+  }
+}
+
+// 保護者へ送る使い捨てリンク。トークン自体が認証情報にあたるため、
+// 検証は Cloud Functions が行う。クライアントからは引けない。
+match /minorConsentLinks/{token} {
+  allow read, write: if false;
+}
+
+// 本人確認書類の閲覧ログ。追記のみで、書き換えも削除もさせない。
+// 画像が自動削除されたあとも、誰がいつ見たかの記録はここに残る。
+match /minorConsentAccessLogs/{logId} {
+  allow get, list: if isOrgAdmin(resource.data.orgId);
+  allow create, update, delete: if false;
+}
