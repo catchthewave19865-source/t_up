@@ -10,6 +10,7 @@
 
 | ファイル | 内容 |
 | --- | --- |
+| `HANDOFF.md` | 引き継ぎ。別セッションで続ける場合はまずこれを読む |
 | `consent-text.v1.ja.md` | 同意文言 v1。紙版から起こしたもの。改版のたびに版を上げる |
 | `types.ts` | Firestore のデータモデル |
 | `firestore.rules.snippet` | Firestore セキュリティルール |
