@@ -41,6 +41,12 @@ match /minorConsentLinks/{token} {
   allow read, write: if false;
 }
 
+// 同意書の案内を送った履歴。管理者は読めるが、書き込みは Cloud Functions のみ。
+match /minorConsentNotifications/{notificationId} {
+  allow get, list: if isOrgAdmin(resource.data.orgId);
+  allow create, update, delete: if false;
+}
+
 // 本人確認書類の閲覧ログ。追記のみで、書き換えも削除もさせない。
 // 画像が自動削除されたあとも、誰がいつ見たかの記録はここに残る。
 match /minorConsentAccessLogs/{logId} {

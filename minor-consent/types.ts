@@ -35,6 +35,18 @@ export type IdDocumentType =
 
 export type Relationship = 'father' | 'mother' | 'other';
 
+/** 同意書の案内を届ける経路。 */
+export type NotifyChannel =
+  | 'line_member'    // 会員本人の LINE へ送り、保護者に転送してもらう
+  | 'sms_guardian'   // 保護者の電話番号へ直接 SMS
+  | 'email_member';  // LINE 未連携の会員向けの控え経路
+
+/** 同意書が必要だと判断した経緯。users に生年月日が無いため複数経路を持つ。 */
+export type ConsentTrigger =
+  | 'self_declared'  // 予約時に「未成年のみで利用」と申告された
+  | 'staff_flag'     // スタッフが管理画面で未成年フラグを立てた
+  | 'birth_date';    // 会員の生年月日から自動判定（生年月日の収集後に有効になる）
+
 /** 同意文言の各条項。consent-text.v1.ja.md の見出し ID と対応する。 */
 export type ClauseId = 'c1' | 'c2' | 'c3' | 'c4' | 'c5' | 'c6' | 'c7';
 
@@ -151,6 +163,32 @@ export interface MinorConsent {
     generatedAt: Timestamp;
   };
 
+  /** 同意書が必要になったきっかけ。 */
+  trigger: {
+    source: ConsentTrigger;
+    /** self_declared のとき、申告のあった予約。 */
+    bookingId?: string;
+    at: Timestamp;
+  };
+
+  /**
+   * 案内の配信状況。管理画面の「再送」ボタンはここを見て出し分ける。
+   * 送信の明細は minorConsentNotifications に残す。
+   */
+  delivery: {
+    /** 初回を含む送信回数。 */
+    sendCount: number;
+    lastSentAt?: Timestamp;
+    lastChannel?: NotifyChannel;
+    /** 送信したスタッフの UID、自動送信なら 'system'。 */
+    lastSentBy?: string;
+    /**
+     * 次に再送できるようになる時刻。既定は最終送信から 10 分。
+     * 保護者への連投を防ぐためのクールダウン。
+     */
+    resendAvailableAt?: Timestamp;
+  };
+
   status: ConsentStatus;
   submittedAt?: Timestamp;
   /** 承認したスタッフ。紙版の「受付」欄に相当。 */
@@ -182,9 +220,39 @@ export interface MinorConsentLink {
   expiresAt: Timestamp;
   /** 一度使ったら再利用させない。 */
   usedAt?: Timestamp;
+  /**
+   * 再送で新しいトークンを発行したときに、古いトークンを失効させる。
+   * 古いリンクが生き続けると、保護者がどれを開いたか分からなくなるため。
+   */
+  revokedAt?: Timestamp;
+  /** 失効させた理由となる新しいトークン。 */
+  supersededByToken?: string;
   /** 発行したスタッフの UID、または自動発行なら 'system'。 */
   createdBy: string;
   createdAt: Timestamp;
+}
+
+/**
+ * `minorConsentNotifications/{notificationId}`
+ * 同意書の案内を送った履歴。管理画面に「いつ・どこへ・誰が送ったか」を出し、
+ * 二重送信の判断材料にする。
+ */
+export interface MinorConsentNotification {
+  orgId: string;
+  consentId: string;
+  channel: NotifyChannel;
+  /** 送信先。電話番号やメールは下 4 桁などに丸めて保存する。 */
+  toMasked: string;
+  /** このとき案内したリンクのトークン。 */
+  linkToken: string;
+  /** 初回送信なら false、再送なら true。 */
+  isResend: boolean;
+  sentAt: Timestamp;
+  /** 送信したスタッフの UID、自動送信なら 'system'。 */
+  sentBy: string;
+  result: 'sent' | 'failed';
+  /** result が 'failed' のときの理由。LINE のブロックなど。 */
+  error?: string;
 }
 
 /**
